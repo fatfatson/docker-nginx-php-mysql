@@ -43,8 +43,11 @@ code-sniff:
 	@echo "Checking the standard code..."
 	@docker-compose exec -T php ./app/vendor/bin/phpcs -v --standard=PSR2 app/src
 
+proxy = 172.17.0.1:9527
+proxy = docker.for.mac.localhost:9527
+proxyset = -e HTTP_PROXY=$(proxy) -e HTTPS_PROXY=$(proxy) -e HTTPS_PROXY_REQUEST_FULLURI=false
 composer-up:
-	@docker run --rm -v $(shell pwd)/web/app:/app composer update
+	docker run $(proxyset) -it --rm -v $(shell pwd)/web/app:/app composer update
 
 docker-start: init
 	docker-compose up -d
